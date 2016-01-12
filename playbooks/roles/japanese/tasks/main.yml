@@ -1,0 +1,22 @@
+---
+- name: japanese pkg install
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - ttf-kochi-gothic
+    - xfonts-intl-japanese
+    - xfonts-intl-japanese-big
+    - xfonts-kaname
+    - uim
+    - uim-anthy
+    - jfbterm
+
+- name: create timezone file(Asia/Tokyo)
+  copy : content='Asia/Tokyo'
+         dest=/etc/timezone
+         owner=root
+         group=root
+         mode=0644
+         backup=yes
+
+- name: update timezone
+  shell: dpkg-reconfigure --frontend noninteractive tzdata

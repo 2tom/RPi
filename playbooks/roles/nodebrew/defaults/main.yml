@@ -1,0 +1,4 @@
+---
+nodebrew:
+  user: pi
+  version: 'v4.2.4'

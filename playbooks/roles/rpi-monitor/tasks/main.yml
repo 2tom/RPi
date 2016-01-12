@@ -1,0 +1,25 @@
+---
+
+- name: https transport and certificate authority
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+
+- name: Check RPi-Monitor repository list
+  shell: ls /etc/apt/sources.list.d/rpimonitor.list
+  register: rpi_repo_check
+  changed_when: False
+  ignore_errors: True
+
+- name: download RPi-monitor repository
+  shell: wget http://goo.gl/rsel0F -O /etc/apt/sources.list.d/rpimonitor.list
+  when: rpi_repo_check|failed
+
+- name: Install public key to truct RPi-Monitor repository
+  apt_key: id=2C0D3C0F keyserver=keyserver.ubuntu.com
+
+- name: RPi-Monitor install
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - rpimonitor

@@ -1,0 +1,21 @@
+---
+# i2c Setup
+
+- name: libi2c i2c-tools pkg install
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - libi2c-dev
+    - i2c-tools
+    - python-smbus
+
+- name: i2c-dev entry check /etc/modules
+  shell: grep 'i2c-dev' /etc/modules
+  register: result
+  failed_when: "'FAILED' in result.stderr"
+
+- name: i2c-dev entry added
+  shell: echo 'i2c-dev' >> /etc/modules
+  when: result|failed
+
+- name: boot-config edit for i2c
+  shell: sed -i -e s;^#dtparam=i2c_arm;dtparam=i2c_arm; /boot/config.txt

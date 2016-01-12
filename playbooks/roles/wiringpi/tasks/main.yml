@@ -1,0 +1,29 @@
+---
+# WiringPi Setup
+
+- name: libi2c pkg install
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - libi2c-dev
+
+- name: check wiringPi
+  command: ls -d /home/pi/wiringPi
+  register: result
+  failed_when: "'FAILED' in result.stderr"
+  sudo: no
+
+- name: clone wiringPi
+  git: repo=git://git.drogon.net/wiringPi dest=/home/pi/wiringPi accept_hostkey=yes
+  when: result|failed
+  sudo: no
+
+- name: check wiringPi
+  command: which gpio
+  register: result_wiringPi
+  failed_when: "'FAILED' in result_wiringPi.stderr"
+  sudo: no
+
+- name: build wiringPi
+  command: ./build chdir=/home/pi/wiringPi
+  when: result_wiringPi|failed
+  sudo: no

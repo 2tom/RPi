@@ -1,0 +1,38 @@
+---
+- name: Check nodebrew installed
+  command: ls ~/.nodebrew
+  register: nodebrew_check
+  changed_when: False
+  ignore_errors: True
+  sudo: no
+
+- name: install nodebrew
+  shell: curl -L git.io/nodebrew | perl - setup
+  when: nodebrew_check|failed
+  sudo: no
+
+- name: Check nodebrew environment
+  command: grep nodebrew ~/.bashrc
+  register: nodebrew_env_check
+  changed_when: False
+  ignore_errors: True
+  sudo: no
+
+- name: PATH Setup for nodebrew
+  lineinfile: >
+    dest="~/.bashrc"
+    line="export PATH=$HOME/.nodebrew/current/bin:$PATH"
+  when: nodebrew_env_check|failed
+  sudo: no
+  
+- name: Check nodejs installed
+  shell: ~/.nodebrew/current/bin/nodebrew ls | grep {{ nodebrew.version }}
+  register: nodejs_install_check
+  changed_when: False
+  ignore_errors: True
+  sudo: no
+
+- name: nodejs install
+  shell: ~/.nodebrew/current/bin/nodebrew install-binary {{ nodebrew.version }} 
+  when: nodejs_install_check|failed
+  sudo: no

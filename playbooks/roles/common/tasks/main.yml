@@ -1,0 +1,22 @@
+---
+- name: common pkg install
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - git-core
+    - build-essential
+    - python-dev
+    - python-pip
+
+- name: OS upgrade
+  apt: upgrade=dist update_cache=yes
+
+- name: multi-user.target へ変更
+  command: systemctl set-default multi-user.target
+
+- name: git user setup
+  command: git config --global user.name {{ git_user.name }}
+  sudo: no
+
+- name: git email setup
+  command: git config --global user.email {{ git_user.email }}
+  sudo: no
