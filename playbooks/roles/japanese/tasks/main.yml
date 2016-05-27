@@ -2,13 +2,19 @@
 - name: japanese pkg install
   apt: name={{ item }} state=latest update_cache=yes
   with_items:
-    - ttf-kochi-gothic
-    - xfonts-intl-japanese
-    - xfonts-intl-japanese-big
-    - xfonts-kaname
-    - uim
-    - uim-anthy
-    - jfbterm
+    - fonts-ipafont
+    - fonts-ipaexfont
+
+- name: japanese input pkg install
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - ibus-anthy
+
+- name: japanese man install
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - manpages-ja
+    - manpages-ja-dev
 
 - name: create timezone file(Asia/Tokyo)
   copy : content='Asia/Tokyo'

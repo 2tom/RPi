@@ -1,0 +1,5 @@
+[rasp]
+192.168.11.26
+[rasp:vars]
+ansible_ssh_user=pi
+
