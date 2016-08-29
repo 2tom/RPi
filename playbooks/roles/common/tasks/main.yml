@@ -6,17 +6,19 @@
     - build-essential
     - python-dev
     - python-pip
+    - python3-dev
+    - curl
+    - libcurl4-openssl-dev
+    - libncursesw5-dev
+    - libgdbm-dev
+    - libc6-dev
+    - zlib1g-dev
+    - libsqlite3-dev
+    - tk-dev
+    - libssl-dev
+    - openssl
+    - libbz2-dev
+    - libreadline-dev
 
 - name: OS upgrade
   apt: upgrade=dist update_cache=yes
-
-- name: multi-user.target へ変更
-  command: systemctl set-default multi-user.target
-
-- name: git user setup
-  command: git config --global user.name {{ git_user.name }}
-  sudo: no
-
-- name: git email setup
-  command: git config --global user.email {{ git_user.email }}
-  sudo: no
